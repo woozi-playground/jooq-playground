@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.woozi.pratice'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '21'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.jooq:jooq-codegen:${jooqVersion}"
+    runtimeOnly 'com.mysql:mysql-connector-j:8.2.0'
+}

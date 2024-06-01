@@ -1,0 +1,2 @@
+rootProject.name = 'jooq-playground'
+include("jooq-custom")

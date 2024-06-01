@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: jooq-playground
+  datasource:
+    url: jdbc:mysql://localhost:3316/sakila
+    username: root
+    password: passwd
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jooq:
+    sql-dialect: mysql
+logging:
+  level:
+    root: DEBUG
