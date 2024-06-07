@@ -8,6 +8,7 @@ import org.jooq.generated.tables.FilmEntity;
 import org.jooq.generated.tables.daos.ActorDao;
 import org.jooq.generated.tables.pojos.Actor;
 import org.jooq.generated.tables.pojos.Film;
+import org.jooq.generated.tables.records.ActorRecord;
 import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
 
@@ -72,5 +73,67 @@ public class ActorRepository {
         return actorListMap.entrySet().stream()
                 .map(entry -> new ActorFilmography(entry.getKey(), entry.getValue()))
                 .toList();
+    }
+
+    /**
+     * 이 부분이 지원되기까지 굉장히 많은 논의가 있었음
+     * jOOQ 3.19 부터 지원
+     *
+     * 참고) https://github.com/jOOQ/jOOQ/issues/2536
+     * @return insert 시에 생성된 PK 값이 세팅된 pojo
+     */
+    public Actor saveByDao(Actor actor) {
+        // 이때 PK (actorId)가 actor 객체에 추가됨
+        actorDao.insert(actor);
+        return actor;
+    }
+
+    public ActorRecord saveByRecord(Actor actor) {
+        ActorRecord actorRecord = dslContext.newRecord(ACTOR, actor);
+        actorRecord.insert();
+
+        // 다만 이 방식은 immutable pojo 에서 사용하기 어려울 수 있음
+        // actor.setActorId(actorRecord.getActorId());
+        return actorRecord;
+    }
+
+    // 쿼리 두번 실행 됨
+    public Actor saveWithReturning(Actor actor) {
+        return dslContext.insertInto(ACTOR,
+                        ACTOR.FIRST_NAME,
+                        ACTOR.LAST_NAME
+                )
+                .values(
+                        actor.getFirstName(),
+                        actor.getLastName()
+                )
+                .returning(ACTOR.fields())
+                .fetchOneInto(Actor.class);
+    }
+
+    public Long saveWithReturningPkOnly(Actor actor) {
+        return dslContext.insertInto(ACTOR,
+                        ACTOR.FIRST_NAME,
+                        ACTOR.LAST_NAME
+                )
+                .values(
+                        actor.getFirstName(),
+                        actor.getLastName()
+                )
+                .returningResult(ACTOR.ACTOR_ID)
+                .fetchOneInto(Long.class);
+    }
+
+    public void bulkInsertWithRows(List<Actor> actorList) {
+        var rows = actorList.stream()
+                .map(actor -> DSL.row(
+                        actor.getFirstName(),
+                        actor.getLastName()
+                )).toList();
+
+        dslContext.insertInto(ACTOR,
+                        ACTOR.FIRST_NAME, ACTOR.LAST_NAME
+                ).valuesOfRows(rows)
+                .execute();
     }
 }
