@@ -1,7 +1,5 @@
 package org.woozi.pratice.jooq.film;
 
-import org.assertj.core.api.Assertions;
-import org.jooq.DSLContext;
 import org.jooq.generated.tables.pojos.Film;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,6 +46,4 @@ class FilmRepositoryTest {
 
         assertThat(filmActorPageResponse).extracting("filmActor").asList().isNotEmpty();
     }
-
-
 }
