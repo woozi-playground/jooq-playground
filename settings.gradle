@@ -1,2 +1,6 @@
 rootProject.name = 'jooq-playground'
-include("jooq-custom")
+include(
+        "jooq-custom",
+        "entity"
+
+)

@@ -44,8 +44,11 @@ dependencies {
 
 
     jooqGenerator project(':jooq-custom')
+    jooqGenerator project(':entity')
     jooqGenerator "org.jooq:jooq:${jooqVersion}"
     jooqGenerator "org.jooq:jooq-meta:${jooqVersion}"
+    jooqGenerator "org.jooq:jooq-meta-extensions-hibernate:${jooqVersion}"
+    jooqGenerator 'com.h2database:h2:1.4.200'
 }
 
 tasks.named('test') {
@@ -55,29 +58,31 @@ tasks.named('test') {
 String dbUser = System.properties["db-user"] ?: "root"
 String dbPasswd = System.properties["db-passwd"] ?: "passwd"
 
+
 jooq {
     version = "${jooqVersion}"
     configurations {
         sakilaDB {
             generationTool {
-                jdbc {
-                    driver = 'com.mysql.cj.jdbc.Driver'
-                    url = 'jdbc:mysql://localhost:3316'
-                    user = "${dbUser}"
-                    password = "${dbPasswd}"
-                }
-
                 generator {
                     name = 'org.jooq.codegen.DefaultGenerator'
 
                     database {
-                        name = 'org.jooq.meta.mysql.MySQLDatabase'
+                        name = 'org.jooq.meta.extensions.jpa.JPADatabase'
                         unsignedTypes = true
-                        schemata {
-                            schema {
-                                inputSchema = 'sakila'
+
+                        properties {
+                            property {
+                                key = 'packages'
+                                value = 'org.woozi.practice.entity'
+                            }
+
+                            property {
+                                key = 'useAttributeConverters'
+                                value = true
                             }
                         }
+
                         forcedTypes {
                             forcedType {
                                 userType = 'java.lang.Long'
@@ -107,7 +112,6 @@ jooq {
                     target {
                         directory = 'src/generated'
                     }
-
 
                     // jooq-custom 내부의 설정
                     strategy.name = 'jooq.custom.generator.JPrefixGeneratorStrategy'
