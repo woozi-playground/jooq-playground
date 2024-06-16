@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.woozi.pratice.jooq.config.converter.PriceCategoryConverter;
 import org.woozi.pratice.jooq.film.domain.FilmPriceSummary;
 import org.woozi.pratice.jooq.film.domain.FilmRentalSummary;
-import org.woozi.pratice.jooq.film.domain.FilmWithActors;
+import org.woozi.pratice.jooq.film.domain.FilmWithActor;
 import org.woozi.pratice.jooq.film.domain.SimpleFilmInfo;
 
 import java.math.BigDecimal;
@@ -46,7 +46,7 @@ public class FilmRepositoryHasA {
                 .fetchOneInto(SimpleFilmInfo.class);
     }
 
-    public List<FilmWithActors> findFilmWithActorsList(Long page, Long pageSize) {
+    public List<FilmWithActor> findFilmWithActorsList(Long page, Long pageSize) {
         final FilmActorEntity FILM_ACTOR = FilmActorEntity.FILM_ACTOR;
         final ActorEntity ACTOR = ActorEntity.ACTOR;
         return dslContext.select(
@@ -61,7 +61,7 @@ public class FilmRepositoryHasA {
                 .on(FILM_ACTOR.ACTOR_ID.eq(ACTOR.ACTOR_ID))
                 .limit(pageSize)
                 .offset((page - 1) * pageSize)
-                .fetchInto(FilmWithActors.class);
+                .fetchInto(FilmWithActor.class);
     }
 
     /**

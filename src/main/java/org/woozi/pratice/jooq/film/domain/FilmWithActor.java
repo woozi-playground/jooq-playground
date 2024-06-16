@@ -4,7 +4,7 @@ import org.jooq.generated.tables.pojos.Actor;
 import org.jooq.generated.tables.pojos.Film;
 import org.jooq.generated.tables.pojos.FilmActor;
 
-public class FilmWithActors {
+public class FilmWithActor {
 
     private Film film;
 
@@ -12,10 +12,10 @@ public class FilmWithActors {
 
     private Actor actor;
 
-    private FilmWithActors() {
+    private FilmWithActor() {
     }
 
-    public FilmWithActors(final Film film, final FilmActor filmActor, final Actor actor) {
+    public FilmWithActor(final Film film, final FilmActor filmActor, final Actor actor) {
         this.film = film;
         this.filmActor = filmActor;
         this.actor = actor;

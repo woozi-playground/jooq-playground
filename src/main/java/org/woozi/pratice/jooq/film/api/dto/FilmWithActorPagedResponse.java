@@ -1,6 +1,6 @@
 package org.woozi.pratice.jooq.film.api.dto;
 
-import org.woozi.pratice.jooq.film.domain.FilmWithActors;
+import org.woozi.pratice.jooq.film.domain.FilmWithActor;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ public class FilmWithActorPagedResponse {
     private final PagedResponse page;
     private final List<FilmActorResponse> filmActor;
 
-    public FilmWithActorPagedResponse(PagedResponse page, List<FilmWithActors> filmWithActors) {
+    public FilmWithActorPagedResponse(PagedResponse page, List<FilmWithActor> filmWithActors) {
         this.page = page;
         this.filmActor = filmWithActors.stream()
                 .map(FilmActorResponse::new)
@@ -30,10 +30,10 @@ public class FilmWithActorPagedResponse {
         private final int filmLength;
         private final String actorFullName;
 
-        public FilmActorResponse(FilmWithActors filmWithActors) {
-            this.filmTitle = filmWithActors.getFilm().getTitle();
-            this.filmLength = filmWithActors.getFilm().getLength();
-            this.actorFullName = filmWithActors.getFullActorName();
+        public FilmActorResponse(FilmWithActor filmWithActor) {
+            this.filmTitle = filmWithActor.getFilm().getTitle();
+            this.filmLength = filmWithActor.getFilm().getLength();
+            this.actorFullName = filmWithActor.getFullActorName();
         }
 
         public String getFilmTitle() {

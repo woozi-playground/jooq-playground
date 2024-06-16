@@ -9,7 +9,7 @@ import org.jooq.generated.tables.daos.FilmDao;
 import org.jooq.generated.tables.pojos.Film;
 import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
-import org.woozi.pratice.jooq.film.domain.FilmWithActors;
+import org.woozi.pratice.jooq.film.domain.FilmWithActor;
 import org.woozi.pratice.jooq.film.domain.SimpleFilmInfo;
 
 import java.util.List;
@@ -38,7 +38,7 @@ public class FilmRepositoryIsA extends FilmDao {
                 .fetchOneInto(SimpleFilmInfo.class);
     }
 
-    public List<FilmWithActors> findFilmWithActorsList(Long page, Long pageSize) {
+    public List<FilmWithActor> findFilmWithActorsList(Long page, Long pageSize) {
         final FilmActorEntity FILM_ACTOR = FilmActorEntity.FILM_ACTOR;
         final ActorEntity ACTOR = ActorEntity.ACTOR;
         return dslContext.select(
@@ -53,6 +53,6 @@ public class FilmRepositoryIsA extends FilmDao {
                 .on(FILM_ACTOR.ACTOR_ID.eq(ACTOR.ACTOR_ID))
                 .limit(pageSize)
                 .offset((page - 1) * pageSize)
-                .fetchInto(FilmWithActors.class);
+                .fetchInto(FilmWithActor.class);
     }
 }

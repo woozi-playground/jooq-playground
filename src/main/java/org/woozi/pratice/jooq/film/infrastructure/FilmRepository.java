@@ -7,7 +7,7 @@ import org.jooq.generated.tables.FilmEntity;
 import org.jooq.generated.tables.pojos.Film;
 import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
-import org.woozi.pratice.jooq.film.domain.FilmWithActors;
+import org.woozi.pratice.jooq.film.domain.FilmWithActor;
 import org.woozi.pratice.jooq.film.domain.SimpleFilmInfo;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class FilmRepository {
                 .fetchOneInto(SimpleFilmInfo.class);
     }
 
-    public List<FilmWithActors> findFilmWithActorsList(final Long page, final Long pageSize) {
+    public List<FilmWithActor> findFilmWithActorsList(final Long page, final Long pageSize) {
         final FilmActorEntity FILM_ACTOR = FilmActorEntity.FILM_ACTOR;
         final ActorEntity ACTOR = ActorEntity.ACTOR;
         return dslContext.select(
@@ -50,6 +50,35 @@ public class FilmRepository {
                 .on(FILM_ACTOR.ACTOR_ID.eq(ACTOR.ACTOR_ID))
                 .limit(pageSize)
                 .offset((page - 1) * pageSize)
-                .fetchInto(FilmWithActors.class);
+                .fetchInto(FilmWithActor.class);
+    }
+
+    public List<FilmWithActor> findFilmWithActorsListImplicitPathJoin (Long page, Long pageSize) {
+        final FilmActorEntity FILM_ACTOR = FilmActorEntity.FILM_ACTOR;
+        return dslContext.select(
+                        DSL.row(FILM.fields()),
+                        DSL.row(FILM_ACTOR.fields()),
+                        DSL.row(FILM_ACTOR.actor().fields())
+                )
+                .from(FILM)
+                .join(FILM_ACTOR)
+                .on(FILM.FILM_ID.eq(FILM_ACTOR.FILM_ID))
+                .limit(pageSize)
+                .offset((page - 1) * pageSize)
+                .fetchInto(FilmWithActor.class);
+    }
+
+    public List<FilmWithActor> findFilmWithActorsListExplicitPathJoin (Long page, Long pageSize) {
+        return dslContext.select(
+                        DSL.row(FILM.fields()),
+                        DSL.row(FILM.filmActor().fields()),
+                        DSL.row(FILM.filmActor().actor().fields())
+                )
+                .from(FILM)
+                .join(FILM.filmActor())
+                .join(FILM.filmActor().actor())
+                .limit(pageSize)
+                .offset((page - 1) * pageSize)
+                .fetchInto(FilmWithActor.class);
     }
 }
