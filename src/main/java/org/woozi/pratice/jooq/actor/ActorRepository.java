@@ -190,4 +190,8 @@ public class ActorRepository {
         actorRecord.setActorId(actorId);
         return actorRecord.delete();
     }
+
+    public ActorRecord findRecordByActorId(Long actorId) {
+        return dslContext.fetchOne(ACTOR, ACTOR.ACTOR_ID.eq(actorId));
+    }
 }
